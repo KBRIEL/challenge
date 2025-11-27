@@ -5,19 +5,20 @@ import com.challenge.API.model.Cliente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
-import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
 public class ClienteServiceTest {
 
     @Autowired
     private ClienteServiceImpl clienteService;
     private Cliente cliente = new Cliente();
 
-    @BeforeEach()
+   @BeforeEach()
     public void Constructor() {
         LocalDate nacimiento = LocalDate.of(1960, 10, 30);
         LocalDate fechaCreacion = LocalDate.now();
@@ -47,42 +48,92 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void insertNombreVacio() {
-        cliente.setNombre("");
+    public void insertarClienteTest(){
 
-        Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> clienteService.insert(cliente));
+      Cliente clienteInsertado = clienteService.insert(cliente);
 
-        assertEquals("El nombre es obligatorio.", ex.getMessage());
+      assertEquals(clienteInsertado.getNombre(), cliente.getNombre());
+      assertEquals(clienteInsertado.getApellido(), cliente.getApellido());
+      assertEquals(clienteInsertado.getRazonSocial(), cliente.getRazonSocial());
+      assertEquals(clienteInsertado.getCuit(), cliente.getCuit());
+      assertEquals(clienteInsertado.getFechaDeNacimiento(), cliente.getFechaDeNacimiento());
+      assertEquals(clienteInsertado.getTelefonoCelular(), cliente.getTelefonoCelular());
+      assertEquals(clienteInsertado.getEmail(), cliente.getEmail());
+      assertEquals(clienteInsertado.getFechaCreacion(), cliente.getFechaCreacion());
+      assertEquals(clienteInsertado.getFechaModificacion(), cliente.getFechaModificacion());
+
+      clienteService.delete(clienteInsertado.getId());
     }
 
     @Test
-    public void insertEmailDuplicado() {
+    void sinNombreLanzaExcepcionTest() {
 
-        when(clienteService.existsByEmail(cliente.getEmail())).thenReturn(true);
+        cliente.setNombre(null);
 
-        Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> clienteService.insert(cliente));
-
-        assertEquals("El email ya se encuentra registrado.", ex.getMessage());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clienteService.insert(cliente)
+        );
     }
-
-    public void updateOk() throws Exception {
-
-
-    }
-
 
     @Test
-    void updateIdNoExisteError() {
-        when(clienteService.existsById(1L)).thenReturn(false);
-
-        Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> clienteService.update(cliente));
-
-        assertEquals("El ID no existe en la base de datos.", ex.getMessage());
+    public void modificarClienteTest() throws Exception {
+        // insreto cliente nuevo en la base y lo recupero
+        Cliente clienteInsertado = clienteService.insert(cliente);
+        // constato que tenga los mismos datos
+        assertEquals(clienteInsertado.getNombre(), cliente.getNombre());
+        assertEquals(clienteInsertado.getApellido(), cliente.getApellido());
+        assertEquals(clienteInsertado.getRazonSocial(), cliente.getRazonSocial());
+        assertEquals(clienteInsertado.getCuit(), cliente.getCuit());
+        assertEquals(clienteInsertado.getFechaDeNacimiento(), cliente.getFechaDeNacimiento());
+        assertEquals(clienteInsertado.getTelefonoCelular(), cliente.getTelefonoCelular());
+        assertEquals(clienteInsertado.getEmail(), cliente.getEmail());
+        assertEquals(clienteInsertado.getFechaCreacion(), cliente.getFechaCreacion());
+        assertEquals(clienteInsertado.getFechaModificacion(), cliente.getFechaModificacion());
+        // le hago cambios permitidos y sin permitir
+        clienteInsertado.setRazonSocial("nueva razon social");
+        clienteInsertado.setEmail("nuevo@email.com");
+        clienteInsertado.setTelefonoCelular("1122223333");
+        clienteInsertado.setCuit("no se puede cambiar");
+        // lo guardo en la base
+        clienteService.update(clienteInsertado);
+        // recupero el cliente con sus modificaciones
+        Cliente clienteModificado = clienteService.get(clienteInsertado.getId()) ;
+        // verifico que se hayan guardado los cambios permitidos
+        assertEquals(clienteInsertado.getRazonSocial(), clienteModificado.getRazonSocial());
+        assertEquals(clienteInsertado.getTelefonoCelular(), clienteModificado.getTelefonoCelular());
+        assertEquals(clienteInsertado.getEmail(), clienteModificado.getEmail());
+        // constato que no se haya cambiado el cuit
+        assertNotEquals(clienteInsertado.getCuit(), clienteModificado.getCuit());
+        //  elimino de la base el sujeto de prueba
+        clienteService.delete(clienteInsertado.getId());
     }
 
+    @Test
+    public void getAllClientesTest(){
+        List<Cliente> clientes = clienteService.getAll();
+
+        assertEquals(clientes.size(),5);
+        assertEquals(clientes.get(0).getId(), 1L);
+
+    }
+
+    @Test
+    public void eliminarUnCliente() throws Exception {
+        // se insreta cliente nuevo en la base y lo recupero
+        Cliente clienteInsertado = clienteService.insert(cliente);
+        //se verifica que exista
+        assertNotNull(clienteService.get(clienteInsertado.getId()));
+        // se elimina de la base de datos
+        clienteService.delete(clienteInsertado.getId());
+        // se verifica que no exista en a base de datos
+        assertThrows(
+                RuntimeException.class,
+                () ->clienteService.get(clienteInsertado.getId())
+        );
+
+
+    }
 
 
 }
