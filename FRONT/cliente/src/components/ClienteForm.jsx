@@ -5,12 +5,12 @@ const ClienteForm = (props) => {
 
   const [form, setForm] = useState({
     nombre: "",
-    apellido: "",
-    cuit: "",
-    email: "",
-    telefono_celular: "",
-    razon_social: "",
-    fecha_nacimiento: ""
+  apellido: "",
+  razonSocial: "",
+  cuit: "",
+  fechaDeNacimiento: "",
+  telefonoCelular: "",
+  email: ""
   });
 
   const handleCarga = (e) => {
@@ -24,19 +24,26 @@ const ClienteForm = (props) => {
     e.preventDefault();
 
     try {
-     // const response = await axios.post("http://localhost:8080/cliente/insert", form);
+     const response = await axios.post("http://localhost:8080/cliente/insert", form,  {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  );
 
       alert("Cliente creado correctamente");
-      //console.log(response.data);
+     console.log(response.data);
 
       setForm({
-        nombre: "",
-        apellido: "",
-        cuit: "",
-        email: "",
-        telefono_celular: "",
-        razon_social: "",
-        fecha_nacimiento: ""
+        
+  nombre: "",
+  apellido: "",
+  razonSocial: "",
+  cuit: "",
+  fechaDeNacimiento: "",
+  telefonoCelular: "",
+  email: ""
+
       });
 
     } catch (error) {
@@ -93,8 +100,8 @@ const ClienteForm = (props) => {
           <div className="titulo-campo">Teléfono Celular</div>
           <input
             type="text"
-            name="telefono_celular"
-            value={form.telefono_celular}
+            name="telefonoCelular"
+            value={form.telefonoCelular}
             onChange={handleCarga}
           />
         </div>
@@ -103,8 +110,8 @@ const ClienteForm = (props) => {
           <div className="titulo-campo">Razón Social</div>
           <input
             type="text"
-            name="razon_social"
-            value={form.razon_social}
+            name="razonSocial"
+            value={form.razonSocial}
             onChange={handleCarga}
           />
         </div>
@@ -113,8 +120,8 @@ const ClienteForm = (props) => {
           <div className="titulo-campo">Fecha de Nacimiento</div>
           <input
             type="date"
-            name="fecha_nacimiento"
-            value={form.fecha_nacimiento}
+            name="fechaDeNacimiento"
+            value={form.fechaDeNacimiento}
             onChange={handleCarga}
           />
         </div>
