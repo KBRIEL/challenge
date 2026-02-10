@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class ClienteDTO {
     private String nombre;
     private String apellido;
-    private String razonSolcial;
+    private String razonSocial;
     private String cuit;
     private LocalDate fechaDeNacimiento;
     private String telefonoCelular;
@@ -18,7 +18,7 @@ public class ClienteDTO {
     public ClienteDTO(Cliente cliente) {
         this.nombre = cliente.getNombre();
         this.apellido = cliente.getApellido();
-        this.razonSolcial = cliente.getRazonSocial();
+        this.razonSocial = cliente.getRazonSocial();
         this.cuit = cliente.getCuit();
         this.fechaDeNacimiento = cliente.getFechaDeNacimiento();
         this.telefonoCelular = cliente.getTelefonoCelular();
@@ -27,17 +27,20 @@ public class ClienteDTO {
         this.fechaModificacion = cliente.getFechaModificacion();
     }
 
-    public ClienteDTO(String nombre, String apellido, String razonSolcial, String cuit, LocalDate fechaDeNacimiento,
+    public ClienteDTO(String nombre, String apellido, String razonSocial, String cuit, LocalDate fechaDeNacimiento,
                       String telefonoCelular, String email, LocalDate fechaCreacion, LocalDate fechaModificacion) {
         this.nombre = nombre;
         this.apellido = apellido;
-        this.razonSolcial = razonSolcial;
+        this.razonSocial = razonSocial;
         this.cuit = cuit;
         this.fechaDeNacimiento = fechaDeNacimiento;
         this.telefonoCelular = telefonoCelular;
         this.email = email;
         this.fechaCreacion = fechaCreacion;
         this.fechaModificacion = fechaModificacion;
+    }
+
+    public ClienteDTO() {
     }
 
     public String getNombre() {
@@ -48,8 +51,8 @@ public class ClienteDTO {
         return apellido;
     }
 
-    public String getRazonSolcial() {
-        return razonSolcial;
+    public String getRazonSocial() {
+        return razonSocial;
     }
 
     public String getCuit() {
@@ -76,3 +79,4 @@ public class ClienteDTO {
         return fechaModificacion;
     }
 }
+
