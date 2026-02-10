@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/cliente")
 public class ClienteController {
 
@@ -41,7 +42,7 @@ public class ClienteController {
 
     @PostMapping("/insert")
     public ResponseEntity<?> insert(@RequestBody ClienteDTO dto) {
-        Cliente cliente = new Cliente(dto.getNombre(), dto.getApellido(), dto.getRazonSolcial(),
+        Cliente cliente = new Cliente(dto.getNombre(), dto.getApellido(), dto.getRazonSocial(),
                 dto.getCuit(), dto.getFechaDeNacimiento(), dto.getTelefonoCelular(), dto.getEmail(), dto.getFechaCreacion(), dto.getFechaModificacion());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new ClienteDTO(clienteService.insert(cliente)));

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,6 +39,8 @@ public class Cliente {
     @Column(name = "fecha_modificacion", updatable = false)
     @CreationTimestamp
     private LocalDate fechaModificacion;
+
+    public Cliente(){};
 
     public Cliente(String nombre, String apellido, String razonSocial, String cuit, LocalDate fechaDeNacimiento,
                    String telefonoCelular, String email, LocalDate fechaCreacion, LocalDate fechaModificacion) {
